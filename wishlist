@@ -1,0 +1,72 @@
+<?php
+namespace Wishlist\Import\Controller\Adminhtml\Import;
+use  Magento\Framework\Controller\ResultFactory;
+use  Magento\Wishlist\Model\WishlistFactory;
+use  Magento\Catalog\Api\ProductRepositoryInterface;
+class Import extends \Magento\Framework\App\Action\Action
+{
+    protected $resultRedirectFactory;
+    protected $wishlistRepository;
+    protected $_productRepository;
+    public function __construct(
+        \Magento\Framework\App\Action\Context $context,
+        ResultFactory $resultRedirectFactory,
+        WishlistFactory $wishlistRepository, 
+        ProductRepositoryInterface $productRepository   )
+    {
+        $this->resultRedirectFactory = $resultRedirectFactory;
+        $this->wishlistFactory       = $wishlistRepository;
+        $this->_productRepository = $productRepository;
+
+
+        return parent::__construct($context);
+    }
+
+    public function execute()
+    {
+    
+         $this->_redirect('*/*/index');
+
+        if($_FILES['csvfiles'])
+        {
+            $filename = explode(".", $_FILES['csvfiles']['name']);//explode for convert string to array
+            
+                if(end($filename) == "csv")
+                {   
+                    $count=0;
+                    $handle = fopen($_FILES['csvfiles']['tmp_name'], "r");
+                    $data = fgetcsv($handle);
+                    $count=count($data);
+                    while($data = fgetcsv($handle))
+                    {  
+                        echo "<pre>";
+                     
+                    
+                        try 
+                        {
+                            $product = $this->_productRepository->getById(1);
+                        } 
+                        catch (NoSuchEntityException $e) 
+                        {
+                        $product = null;
+
+                        echo $e;
+                        }
+
+                        $wishlist = $this->_wishlistRepository->create()->loadByCustomerId(1, true);
+
+                        $wishlist->addNewItem($product);
+                        $wishlist->save();
+
+                                                                  
+
+
+                    }
+                
+                }
+            
+        }
+
+        return  $resultRedirect;
+    }
+}
