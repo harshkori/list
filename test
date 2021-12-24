@@ -1,0 +1,82 @@
+<?php
+namespace VitalLiving\Mainmodule\Block\Category;
+
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
+use Magento\Catalog\Model\CategoryFactory;
+use Magento\Framework\Registry;
+
+
+/**
+ * Category link block
+ */
+class SubCategory extends Template
+{
+    private $layerResolver;
+
+    protected $_registry;
+
+    protected $categoryFactory;
+
+
+    public function __construct(
+        Context $context,
+        \Magento\Catalog\Model\Layer\Resolver $layerResolver,
+        Registry $registry,
+        CategoryFactory $categoryFactory,
+        array $data = []
+    ) {
+        parent::__construct($context, $data);
+
+        $this->layerResolver = $layerResolver;
+        $this->_registry = $registry;
+        $this->categoryFactory=$categoryFactory;
+
+    }
+    // public function cat(){
+    //     try {
+
+    //         return $this->_registry->registry('current_category');
+    //     } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+    //                     exit("wrong");
+
+    //         return ['response' => 'Category Not Found'];
+    //     }
+    // }
+
+    public function getCurrentCategory()
+    {        
+        return $this->_registry->registry('current_category');
+    }
+
+    public function getCategoryCollection()
+    {
+        
+        $currentCategory = $this->getCurrentCategory();
+
+        $category=$currentCategory->getChildrenCategories()->addAttributeToSelect('*');
+        
+        return $category;
+    }
+
+
+    // public function test()
+    // {
+
+    //     $subCategory=$this->categoryFactory->create()->load(12);
+    //     $subCats = $subCategory->getChildrenCategories();
+    //      foreach ($subCats as $subcat) {
+
+    //         echo $subcat->getId();
+    //         echo "<pre>";
+    //         print_r(get_class_methods($subcat)) ;   
+    //     }
+    //     return $subCats;
+
+    // }
+
+
+
+    
+
+}
