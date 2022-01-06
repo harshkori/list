@@ -1,0 +1,82 @@
+<head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.css" integrity="sha512-RWhcC19d8A3vE7kpXq6Ze4GcPfGe3DQWuenhXAbcGiZOaqGojLtWwit1eeM9jLGHFv8hnwpX3blJKGjTsf2HxQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<?php
+$connection =new mysqli("localhost", "root", "", "img");
+$sqlimage = "SELECT * FROM img";
+$imageresult1 = mysqli_query($connection,$sqlimage);
+?>
+<div class="owl-carousel owl-theme" id="carousel">
+
+<?php
+$counter=1;
+while($rows = mysqli_fetch_assoc($imageresult1))
+    {       
+    ?>
+    <?php if($counter==1 ) {?>
+
+    <div class="Main">
+    <?php } ?>
+    <?php if($counter%2 !=0) {?>
+
+            <div class="item1">
+                <img height="300" width="300" src="<?php echo $rows['src'];?>">
+                    <?php echo $counter; ?>
+             </div>
+        <?php } ?>
+      
+        <?php if($counter%2==0){ ?>
+
+        <div class="item2">
+            <img height="300" width="300" src="<?php echo $rows['src'];?>">
+            <?php echo $counter; ?>
+        </div>
+        
+        <?php } ?>
+        <?php if($counter%2 ==0){
+        $counter-- ?>
+        </div>
+        <?php }else{$counter++;} ?>
+
+        <?php  }?>
+       
+    </div>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js" integrity="sha512-9CWGXFSJ+/X0LWzSRCZFsOPhSfm6jbnL+Mpqo0o8Ke2SYr8rCTqb4/wGm+9n13HtDE1NQpAEOrMecDZw4FXQGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    jQuery("#carousel").owlCarousel({
+      autoplay: true,
+      lazyLoad: true,
+      loop: true,
+      margin: 20,
+       /*
+      animateOut: 'fadeOut',
+      animateIn: 'fadeIn',
+      */
+      responsiveClass: true,
+      autoHeight: true,
+      autoplayTimeout: 7000,
+      smartSpeed: 800,
+      nav: true,
+      responsive: {
+        0: {
+          items: 1
+        },
+
+        600: {
+          items: 3
+        },
+
+        1024: {
+          items: 4
+        },
+
+        1366: {
+          items: 3,
+        }
+      }
+    });
+</script>
